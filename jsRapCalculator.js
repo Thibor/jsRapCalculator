@@ -126,7 +126,6 @@ var bo = (c.match(/\(/g) || []).length;
 var bc = (c.match(/\)/g) || []).length;
 if(bo > bc) $('.calc-open').addClass('calc-active');else $('.calc-open').removeClass('calc-active');
 if(bo < bc) $('.calc-close').addClass('calc-active');else $('.calc-close').removeClass('calc-active');
-//if(!c || bo != bc)return;
 c=c.replace(new RegExp(' ','g'),'');
 var c2 = c.replace('pow','Math.pow');
 try{
