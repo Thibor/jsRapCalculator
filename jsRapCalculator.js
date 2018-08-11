@@ -1,28 +1,27 @@
 function GetCaretPosition(ctrl){
-	var CaretPos = 0;
-	if (document.selection) {
-		ctrl.focus ();
-		var Sel = document.selection.createRange ();
-		Sel.moveStart ('character', -ctrl.value.length);
-		CaretPos = Sel.text.length;
-	}
-	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
-		CaretPos = ctrl.selectionStart;
-	return (CaretPos);
+var CaretPos = 0;
+if (document.selection){
+	ctrl.focus ();
+	var Sel = document.selection.createRange ();
+	Sel.moveStart ('character', -ctrl.value.length);
+	CaretPos = Sel.text.length;
+}else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+	CaretPos = ctrl.selectionStart;
+return (CaretPos);
 }
 
 
 function SetCaretPosition(ctrl, pos){
-	if(ctrl.setSelectionRange){
-		ctrl.focus();
-		ctrl.setSelectionRange(pos,pos);
-	}else if (ctrl.createTextRange) {
-		var range = ctrl.createTextRange();
-		range.collapse(true);
-		range.moveEnd('character', pos);
-		range.moveStart('character', pos);
-		range.select();
-	}
+if(ctrl.setSelectionRange){
+	ctrl.focus();
+	ctrl.setSelectionRange(pos,pos);
+}else if (ctrl.createTextRange){
+	var range = ctrl.createTextRange();
+	range.collapse(true);
+	range.moveEnd('character', pos);
+	range.moveStart('character', pos);
+	range.select();
+}
 }
 
 (function($){
@@ -73,8 +72,8 @@ return this.each(function(){
 	d = $('<div>').appendTo(this);
 	AddButton(d,'+','calc-button-brown','');
 	AddButton(d,'-','calc-button-brown','');
-	AddButton(d,'x','calc-button-brown','');
-	AddButton(d,'÷','calc-button-brown','');
+	AddButton(d,'&times;','calc-button-brown','');
+	AddButton(d,'&divide;','calc-button-brown','');
 	AddButton(d,'(','calc-button-brown calc-open','');
 	AddButton(d,')','calc-button-brown calc-close','');
 	AddButton(d,'=','calc-button-brown','');
@@ -104,8 +103,8 @@ return this.each(function(){
 			case 'OCT': base.SetMode(8);break;
 			default:
 			switch(k){
-				case 'รท': k = '/';break;
-				case 'x': k = '*';break;
+				case '÷': k = '/';break;
+				case '×': k = '*';break;
 				case 'MOD': k = '%';break;
 				case 'OR': k = '|';break;
 				case 'AND': k = '&';break;
@@ -127,15 +126,24 @@ var bo = (c.match(/\(/g) || []).length;
 var bc = (c.match(/\)/g) || []).length;
 if(bo > bc) $('.calc-open').addClass('calc-active');else $('.calc-open').removeClass('calc-active');
 if(bo < bc) $('.calc-close').addClass('calc-active');else $('.calc-close').removeClass('calc-active');
-if(!c || bo != bc)return;
+//if(!c || bo != bc)return;
 c=c.replace(new RegExp(' ','g'),'');
 var c2 = c.replace('pow','Math.pow');
+try{
 var v = eval(c2);
+}
+catch(err){
+return;
+}
+if(isNaN(v))return;
 v = v.toString(base.mode);
 v = v.toLocaleString();
 $(base.divre).text(v);
-if(e && e.keyCode == 13)
-	$(base.divbo).append(c + ' =<br>' + v + '<br>');
+if(e && e.keyCode == 13){
+	var d = $(base.divbo);
+	d.append(c + ' =<br>' + v + '<br>');
+	d.scrollTop(d[0].scrollHeight - d[0].clientHeight);
+}	
 }
 	
 })
