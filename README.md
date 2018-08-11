@@ -1,0 +1,2 @@
+# jsRapCalculator
+JQuery calculator plugin.
