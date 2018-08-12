@@ -44,7 +44,7 @@ return this.each(function(){
 	}
 	this.settings = $.extend(defaults,options);
 	this.mode = 10;
-	$(this).addClass('calculator');
+	$(this).addClass('calc-main');
 	this.divre = $('<div>').addClass('calc-display').text('0').appendTo(this);
 	var d = $('<div>').appendTo(this);
 	AddButton(d,'HEX','calc-button-green calc-mode16','Mode Hexadecimal');
@@ -76,7 +76,7 @@ return this.each(function(){
 	AddButton(d,'&divide;','calc-button-brown','');
 	AddButton(d,'(','calc-button-brown calc-open','');
 	AddButton(d,')','calc-button-brown calc-close','');
-	AddButton(d,'=','calc-button-brown','');
+	AddButton(d,'=','calc-button-brown calc-equal','');
 	d = $('<div>').appendTo(this);
 	AddButton(d,'AC','calc-button-orange','All Clear');
 	AddButton(d,'DEL','calc-button-orange','Delete');
@@ -124,10 +124,11 @@ base.divin.focus();
 var c = $(base.divin).val();
 var bo = (c.match(/\(/g) || []).length;
 var bc = (c.match(/\)/g) || []).length;
-if(bo > bc) $('.calc-open').addClass('calc-active');else $('.calc-open').removeClass('calc-active');
-if(bo < bc) $('.calc-close').addClass('calc-active');else $('.calc-close').removeClass('calc-active');
+if(bo > bc) $('.calc-close').addClass('calc-active');else $('.calc-close').removeClass('calc-active');
+if(bo < bc) $('.calc-open').addClass('calc-active');else $('.calc-open').removeClass('calc-active');
 c=c.replace(new RegExp(' ','g'),'');
 var c2 = c.replace('pow','Math.pow');
+$('.calc-equal').removeClass('calc-active');
 try{
 var v = eval(c2);
 }
@@ -135,8 +136,11 @@ catch(err){
 return;
 }
 if(isNaN(v))return;
-v = v.toString(base.mode);
-v = v.toLocaleString();
+$('.calc-equal').addClass('calc-active');
+if(base.mode != 10)
+	v = v.toString(base.mode);
+else
+	v = v.toLocaleString();
 $(base.divre).text(v);
 if(e && e.keyCode == 13){
 	var d = $(base.divbo);
