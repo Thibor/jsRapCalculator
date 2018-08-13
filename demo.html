@@ -8,11 +8,13 @@
 <script src="jsRapCalculator.js"></script>
 <script>
 $(document).ready(function(){
-rapCalculator = ($('#demo1').jsRapCalculator());
+$('#demo1').jsRapCalculator({name:'name1'});
+$('#demo2').jsRapCalculator({showMode:false,showLogic:false,showHistory:false,name:'name2'});
 });
 </script>
 </head>
 <body>
 <div id="demo1"></div>
+<div id="demo2" style="margin-top:32px;"></div>
 </body>
 </html>

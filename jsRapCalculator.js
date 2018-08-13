@@ -27,69 +27,15 @@ if(ctrl.setSelectionRange){
 (function($){
 $.fn.jsRapCalculator = function(options){
 var defaults = {
+	showMode:true,
+	showLogic:true,
+	showHistory:true
 }
 
-function AddButton(d,t,c,i){
-$(d).append('<button class="calc-button ' + c + '" title="' + i + '">' + t + '</button>');
-}
-	
-return this.each(function(){
-	this.SetMode = function(m){
-		this.mode = m;
-		$('.calc-mode2').removeClass('calc-active');
-		$('.calc-mode8').removeClass('calc-active');
-		$('.calc-mode10').removeClass('calc-active');
-		$('.calc-mode16').removeClass('calc-active');
-		$('.calc-mode' + m).addClass('calc-active');
-	}
-	this.settings = $.extend(defaults,options);
-	this.mode = 10;
-	$(this).addClass('calc-main');
-	this.divre = $('<div>').addClass('calc-display').text('0').appendTo(this);
-	var d = $('<div>').appendTo(this);
-	AddButton(d,'HEX','calc-button-green calc-mode16','Mode Hexadecimal');
-	AddButton(d,'DEC','calc-button-green calc-mode10 calc-active','Mode Decimal');
-	AddButton(d,'OCT','calc-button-green calc-mode8','Mode Octal');
-	AddButton(d,'BIN','calc-button-green calc-mode2','Mode Binary');
-	d = $('<div>').appendTo(this);
-	AddButton(d,'0','calc-button-black','');
-	AddButton(d,'1','calc-button-black','');
-	AddButton(d,'2','calc-button-black','');
-	AddButton(d,'3','calc-button-black','');
-	AddButton(d,'4','calc-button-black','');
-	AddButton(d,'5','calc-button-black','');
-	AddButton(d,'6','calc-button-black','');
-	AddButton(d,'7','calc-button-black','');
-	AddButton(d,'8','calc-button-black','');
-	AddButton(d,'9','calc-button-black','');
-	AddButton(d,'.','calc-button-black','');
-	d = $('<div>').appendTo(this);
-	AddButton(d,'MOD','calc-button-blue','Division Remainder');
-	AddButton(d,'OR','calc-button-blue','Bitwise OR');
-	AddButton(d,'AND','calc-button-blue','Bitwise AND');
-	AddButton(d,'XOR','calc-button-blue','Bitwise XOR');
-	AddButton(d,'NOT','calc-button-blue','Logical NOT');
-	d = $('<div>').appendTo(this);
-	AddButton(d,'+','calc-button-brown','');
-	AddButton(d,'-','calc-button-brown','');
-	AddButton(d,'&times;','calc-button-brown','');
-	AddButton(d,'&divide;','calc-button-brown','');
-	AddButton(d,'(','calc-button-brown calc-open','');
-	AddButton(d,')','calc-button-brown calc-close','');
-	AddButton(d,'=','calc-button-brown calc-equal','');
-	d = $('<div>').appendTo(this);
-	AddButton(d,'AC','calc-button-orange','All Clear');
-	AddButton(d,'DEL','calc-button-orange','Delete');
-	this.divin = $('<input>').addClass('divin').appendTo(this);
-	this.divbo = $('<div>').addClass('divbo').appendTo(this);
-	var base = this;
-	$(this.divin).bind({
-			keyup : function(e){
-				base.Calculate(e);
-			}
-	});
-	
-	$('.calc-button').click(function(){
+function AddButton(base,d,t,c,i){
+var o = $('<button class="calc-button ' + c + '" title="' + i + '">' + t + '</button>').appendTo(d);
+$(o).bind({
+	click : function(e){
 		var k = $(this).text();
 		var t = $(base.divin).val();
 		var e = $.Event('keyup');
@@ -117,18 +63,85 @@ return this.each(function(){
 			SetCaretPosition(base.divin[0],cp + 1);
 		}
 		$(base.divin).trigger(e);
-	});	
+	}
+});
+return o;
+}
+	
+return this.each(function(){
+	this.SetMode = function(m){
+		this.mode = m;
+		$('.calc-mode2').removeClass('calc-active');
+		$('.calc-mode8').removeClass('calc-active');
+		$('.calc-mode10').removeClass('calc-active');
+		$('.calc-mode16').removeClass('calc-active');
+		$('.calc-mode' + m).addClass('calc-active');
+	}
+	this.settings = $.extend(defaults,options);
+	this.mode = 10;
+	$(this).addClass('calc-main');
+	this.divre = $('<div>').addClass('calc-edit calc-display').text('0').appendTo(this);
+	if(this.settings.showMode){
+		var d = $('<div>').appendTo(this);
+		AddButton(this,d,'HEX','calc-button-green calc-mode16','Mode Hexadecimal');
+		AddButton(this,d,'DEC','calc-button-green calc-mode10 calc-active','Mode Decimal');
+		AddButton(this,d,'OCT','calc-button-green calc-mode8','Mode Octal');
+		AddButton(this,d,'BIN','calc-button-green calc-mode2','Mode Binary');
+	}
+	var d = $('<div>').appendTo(this);
+	AddButton(this,d,'0','calc-button-black','');
+	AddButton(this,d,'1','calc-button-black','');
+	AddButton(this,d,'2','calc-button-black','');
+	AddButton(this,d,'3','calc-button-black','');
+	AddButton(this,d,'4','calc-button-black','');
+	AddButton(this,d,'5','calc-button-black','');
+	AddButton(this,d,'6','calc-button-black','');
+	AddButton(this,d,'7','calc-button-black','');
+	AddButton(this,d,'8','calc-button-black','');
+	AddButton(this,d,'9','calc-button-black','');
+	AddButton(this,d,'.','calc-button-black','');
+	if(this.settings.showLogic){
+		var d = $('<div>').appendTo(this);
+		AddButton(this,d,'MOD','calc-button-blue','Division Remainder');
+		AddButton(this,d,'OR','calc-button-blue','Bitwise OR');
+		AddButton(this,d,'AND','calc-button-blue','Bitwise AND');
+		AddButton(this,d,'XOR','calc-button-blue','Bitwise XOR');
+		AddButton(this,d,'NOT','calc-button-blue','Logical NOT');
+	}
+	var d = $('<div>').appendTo(this);
+	AddButton(this,d,'+','calc-button-brown','');
+	AddButton(this,d,'-','calc-button-brown','');
+	AddButton(this,d,'&times;','calc-button-brown','');
+	AddButton(this,d,'&divide;','calc-button-brown','');
+	this.butOpen = AddButton(this,d,'(','calc-button-brown calc-open','');
+	this.butClose = AddButton(this,d,')','calc-button-brown calc-close','');
+	if(this.settings.showHistory)
+		this.butEqual = AddButton(this,d,'=','calc-button-brown calc-equal','');
+	var d = $('<div>').appendTo(this);
+	AddButton(this,d,'AC','calc-button-orange','All Clear');
+	AddButton(this,d,'DEL','calc-button-orange','Delete');
+	this.divin = $('<input>').addClass('calc-edit calc-input').appendTo(this);
+	if(this.settings.showHistory)
+		this.divHistory = $('<div>').addClass('calc-edit calc-history').appendTo(this);
+	var base = this;
+	$(this.divin).bind({
+			keyup : function(e){
+				base.Calculate(e);
+			}
+	});
 	
 this.Calculate=function(e){
 base.divin.focus();
 var c = $(base.divin).val();
 var bo = (c.match(/\(/g) || []).length;
 var bc = (c.match(/\)/g) || []).length;
-if(bo > bc) $('.calc-close').addClass('calc-active');else $('.calc-close').removeClass('calc-active');
-if(bo < bc) $('.calc-open').addClass('calc-active');else $('.calc-open').removeClass('calc-active');
+if(bo > bc) $(base.butClose).addClass('calc-active');else $(base.butClose).removeClass('calc-active');
+if(bo < bc) $(base.butOpen).addClass('calc-active');else $(base.butOpen).removeClass('calc-active');
 c=c.replace(new RegExp(' ','g'),'');
 var c2 = c.replace('pow','Math.pow');
-$('.calc-equal').removeClass('calc-active');
+if(base.butEqual)
+	$(base.butEqual).removeClass('calc-active');
+$(base.divre).text(0);
 try{
 var v = eval(c2);
 }
@@ -136,14 +149,14 @@ catch(err){
 return;
 }
 if(isNaN(v))return;
-$('.calc-equal').addClass('calc-active');
+if(base.butEqual)
+	$(base.butEqual).addClass('calc-active');
 if(base.mode != 10)
 	v = v.toString(base.mode);
-else
-	v = v.toLocaleString();
+else v = v.toLocaleString(undefined, { maximumFractionDigits:20});
 $(base.divre).text(v);
-if(e && e.keyCode == 13){
-	var d = $(base.divbo);
+if(this.divHistory && e && e.keyCode == 13){
+	var d = $(base.divHistory);
 	d.append(c + ' =<br>' + v + '<br>');
 	d.scrollTop(d[0].scrollHeight - d[0].clientHeight);
 }	
