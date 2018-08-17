@@ -43,10 +43,10 @@ $(o).bind({
 			case '=': e.keyCode = 13;break;
 			case 'DEL': t = t.substring(0,t.length - 1);$(base.divin).val(t);break;
 			case 'AC': $(base.divin).val('');$(base.divre).text('0');break;
-			case 'DEC': base.SetMode(10);break;
-			case 'HEX': base.SetMode(16);break;
-			case 'BIN': base.SetMode(2);break;
-			case 'OCT': base.SetMode(8);break;
+			case 'DEC': base.SetMode(10,k);break;
+			case 'HEX': base.SetMode(16,k);break;
+			case 'BIN': base.SetMode(2,k);break;
+			case 'OCT': base.SetMode(8,k);break;
 			default:
 			switch(k){
 				case '÷': k = '/';break;
@@ -69,8 +69,9 @@ return o;
 }
 	
 return this.each(function(){
-	this.SetMode = function(m){
+	this.SetMode = function(m,n){
 		this.mode = m;
+		this.modeName = n;
 		$('.calc-mode2').removeClass('calc-active');
 		$('.calc-mode8').removeClass('calc-active');
 		$('.calc-mode10').removeClass('calc-active');
@@ -78,7 +79,6 @@ return this.each(function(){
 		$('.calc-mode' + m).addClass('calc-active');
 	}
 	this.settings = $.extend(defaults,options);
-	this.mode = 10;
 	$(this).addClass('calc-main');
 	this.divre = $('<div>').addClass('calc-edit calc-display').text('0').appendTo(this);
 	if(this.settings.showMode){
@@ -130,37 +130,39 @@ return this.each(function(){
 			}
 	});
 	
-this.Calculate=function(e){
-base.divin.focus();
-var c = $(base.divin).val();
-var bo = (c.match(/\(/g) || []).length;
-var bc = (c.match(/\)/g) || []).length;
-if(bo > bc) $(base.butClose).addClass('calc-active');else $(base.butClose).removeClass('calc-active');
-if(bo < bc) $(base.butOpen).addClass('calc-active');else $(base.butOpen).removeClass('calc-active');
-c=c.replace(new RegExp(' ','g'),'');
-var c2 = c.replace('pow','Math.pow');
-if(base.butEqual)
-	$(base.butEqual).removeClass('calc-active');
-$(base.divre).text(0);
-try{
-var v = eval(c2);
-}
-catch(err){
-return;
-}
-if(isNaN(v))return;
-if(base.butEqual)
-	$(base.butEqual).addClass('calc-active');
-if(base.mode != 10)
-	v = v.toString(base.mode);
-else v = v.toLocaleString(undefined, { maximumFractionDigits:20});
-$(base.divre).text(v);
-if(this.divHistory && e && e.keyCode == 13){
-	var d = $(base.divHistory);
-	d.append(c + ' =<br>' + v + '<br>');
-	d.scrollTop(d[0].scrollHeight - d[0].clientHeight);
-}	
-}
+	this.Calculate=function(e){
+		base.divin.focus();
+		var c = $(base.divin).val();
+		var bo = (c.match(/\(/g) || []).length;
+		var bc = (c.match(/\)/g) || []).length;
+		if(bo > bc) $(base.butClose).addClass('calc-active');else $(base.butClose).removeClass('calc-active');
+		if(bo < bc) $(base.butOpen).addClass('calc-active');else $(base.butOpen).removeClass('calc-active');
+		c = c.replace(new RegExp(' ','g'),'');
+		var c2 = c.replace('pow','Math.pow');
+		if(base.butEqual)
+			$(base.butEqual).removeClass('calc-active');
+		$(base.divre).text(0);
+		try{
+			var v = eval(c2);
+		}
+		catch(err){
+			return;
+		}
+		if(isNaN(v))return;
+		if(base.butEqual)
+			$(base.butEqual).addClass('calc-active');
+		if(base.mode != 10)
+			v = v.toString(base.mode);
+		else
+			v = v.toLocaleString(undefined, { maximumFractionDigits:20});
+		$(base.divre).text(v);
+		if(this.divHistory && e && e.keyCode == 13){
+			var d = $(base.divHistory);
+			d.append(c + ' ' + this.modeName + '<br>' + v + '<br>');
+			d.scrollTop(d[0].scrollHeight - d[0].clientHeight);
+		}
+	}
 	
+	this.SetMode(10,'DEC');	
 })
 }})(jQuery);
