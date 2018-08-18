@@ -28,8 +28,9 @@ if(ctrl.setSelectionRange){
 $.fn.jsRapCalculator = function(options){
 var defaults = {
 	showMode:true,
-	showLogic:true,
-	showHistory:true
+	showBitwise:true,
+	showHistory:true,
+	maximumFractionDigits:20
 }
 
 function AddButton(base,d,t,c,i){
@@ -51,16 +52,20 @@ $(o).bind({
 			switch(k){
 				case '÷': k = '/';break;
 				case '×': k = '*';break;
+				case 'π': k = 'PI';break;
+				case 'e': k = 'E';break;
 				case 'MOD': k = '%';break;
 				case 'OR': k = '|';break;
 				case 'AND': k = '&';break;
 				case 'XOR': k = '^';break;
-				case 'NOT': k = '!';break;
+				case 'NOT': k = '~';break;
+				case 'SHL': k = '<<';break;
+				case 'SHR': k = '>>>';break;
 			}	
 			var cp = GetCaretPosition(base.divin[0]);
 			var s = t.substring(0,cp) + k + t.substring(cp, t.length);
 			$(base.divin).val(s);
-			SetCaretPosition(base.divin[0],cp + 1);
+			SetCaretPosition(base.divin[0],cp + k.length);
 		}
 		$(base.divin).trigger(e);
 	}
@@ -100,13 +105,17 @@ return this.each(function(){
 	AddButton(this,d,'8','calc-button-black','');
 	AddButton(this,d,'9','calc-button-black','');
 	AddButton(this,d,'.','calc-button-black','');
-	if(this.settings.showLogic){
+	if(this.settings.showBitwise){
 		var d = $('<div>').appendTo(this);
 		AddButton(this,d,'MOD','calc-button-blue','Division Remainder');
 		AddButton(this,d,'OR','calc-button-blue','Bitwise OR');
 		AddButton(this,d,'AND','calc-button-blue','Bitwise AND');
 		AddButton(this,d,'XOR','calc-button-blue','Bitwise XOR');
-		AddButton(this,d,'NOT','calc-button-blue','Logical NOT');
+		AddButton(this,d,'NOT','calc-button-blue','Bitwise NOT');
+		AddButton(this,d,'SHL','calc-button-blue','Zero fill left shift');
+		AddButton(this,d,'SHR','calc-button-blue','Zero fill right shift');
+		AddButton(this,d,'&pi;','calc-button-purple','PI');
+		AddButton(this,d,'e','calc-button-purple','Euler\'s number');
 	}
 	var d = $('<div>').appendTo(this);
 	AddButton(this,d,'+','calc-button-brown','');
@@ -138,7 +147,17 @@ return this.each(function(){
 		if(bo > bc) $(base.butClose).addClass('calc-active');else $(base.butClose).removeClass('calc-active');
 		if(bo < bc) $(base.butOpen).addClass('calc-active');else $(base.butOpen).removeClass('calc-active');
 		c = c.replace(new RegExp(' ','g'),'');
-		var c2 = c.replace('pow','Math.pow');
+		var c2 = c;
+		c2 = c2.replace('E','Math.E');
+		c2 = c2.replace('PI','Math.PI');
+		c2 = c2.replace('asin','Math.asin');
+		c2 = c2.replace('atan','Math.atan');
+		c2 = c2.replace('cos','Math.cos');
+		c2 = c2.replace('exp','Math.exp');
+		c2 = c2.replace('log','Math.log');
+		c2 = c2.replace('pow','Math.pow');
+		c2 = c2.replace('sin','Math.sin');
+		c2 = c2.replace('tan','Math.tan');
 		if(base.butEqual)
 			$(base.butEqual).removeClass('calc-active');
 		$(base.divre).text(0);
@@ -154,7 +173,7 @@ return this.each(function(){
 		if(base.mode != 10)
 			v = v.toString(base.mode);
 		else
-			v = v.toLocaleString(undefined, { maximumFractionDigits:20});
+			v = v.toLocaleString(undefined,{maximumFractionDigits:base.settings.maximumFractionDigits});
 		$(base.divre).text(v);
 		if(this.divHistory && e && e.keyCode == 13){
 			var d = $(base.divHistory);
