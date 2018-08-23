@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Demo</title>
+<link rel="stylesheet" href="index.css" />
+<link rel="stylesheet" href="jsRapCalculator.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="jsRapCalculator.js"></script>
+<script>
+$(document).ready(function(){
+$('#demo1').jsRapCalculator({name:'name1'});
+$('#demo2').jsRapCalculator({showMode:false,showBitwise:false,showHistory:false,maximumFractionDigits:2});
+});
+</script>
+</head>
+<body>
+<div id="divMain">
+<div id="divGitHub">
+<div id="GitHub" onclick="window.open('https://github.com/Thibor/jsRapCalculator', '_blank')">Fork me on GitHub</div>
+</div>
+<div>Demo 1</div>
+<div id="demo1"></div>
+<div>Demo 2</div>
+<div id="demo2"></div>
+</div>
+</body>
+</body>
+</html>

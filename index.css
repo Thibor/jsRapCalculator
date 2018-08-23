@@ -1,0 +1,35 @@
+#divMain{
+margin:auto;		
+width:80%;
+}
+#divGitHub{
+top:0px;
+right:0px;
+width:200px;
+height:200px;
+overflow:hidden;
+position:absolute;
+z-index:1;
+}
+#GitHub{
+background-color:#800;	
+border:solid 2px black;	
+color:white;
+cursor:pointer;
+font:bold 14px Arial,Helvetica,sans-serif;
+height:20px;
+padding-top:3px;
+position:absolute;
+right:60px;
+text-align: center;
+transform:translate(50%,-50%) rotate(45deg);
+text-shadow: 0 0 8px black;
+top:60px;
+width:240px;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+}
+#GitHub:hover{
+background-color:#f00;
+}
