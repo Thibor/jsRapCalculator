@@ -54,6 +54,7 @@ $(o).bind({
 				case '×': k = '*';break;
 				case 'π': k = 'PI';break;
 				case 'e': k = 'E';break;
+				case 'EXP': k = 'e';break;
 				case 'MOD': k = '%';break;
 				case 'OR': k = '|';break;
 				case 'AND': k = '&';break;
@@ -107,6 +108,7 @@ return this.each(function(){
 	AddButton(this,d,'.','calc-button-black','');
 	if(this.settings.showBitwise){
 		var d = $('<div>').appendTo(this);
+		AddButton(this,d,'EXP','calc-button-blue','Exponentiation');
 		AddButton(this,d,'MOD','calc-button-blue','Division Remainder');
 		AddButton(this,d,'OR','calc-button-blue','Bitwise OR');
 		AddButton(this,d,'AND','calc-button-blue','Bitwise AND');
