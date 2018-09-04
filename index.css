@@ -10,6 +10,7 @@ height:200px;
 overflow:hidden;
 position:absolute;
 z-index:1;
+pointer-events:none;
 }
 #GitHub{
 background-color:#800;	
@@ -29,6 +30,10 @@ width:240px;
 -webkit-touch-callout: none;
 -webkit-user-select: none;
 -moz-user-select: none;
+pointer-events:auto;
+}
+#GitHub:after{
+content:'Star me on GitHub';
 }
 #GitHub:hover{
 background-color:#f00;
